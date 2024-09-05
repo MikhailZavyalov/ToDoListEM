@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="22522" systemVersion="23D56" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="TodoModel" representedClassName="TodoModel" syncable="YES" codeGenerationType="class">
+        <attribute name="todoDescription" optional="YES" attributeType="String"/>
+        <attribute name="todoName" optional="YES" attributeType="String"/>
+        <attribute name="todoStatus" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="todoTime" optional="YES" attributeType="String"/>
+    </entity>
+</model>

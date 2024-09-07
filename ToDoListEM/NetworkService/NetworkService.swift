@@ -1,7 +1,7 @@
 import Foundation
 
 protocol NetworkService {
-    func fetchTodos(completion: @escaping (Result<TodosDTO, Error>) -> Void)
+    func fetchTodos(completion: @escaping (Result<TodosServerModel, Error>) -> Void)
 }
 
 final class NetworkServiceImplementation: NetworkService {
@@ -12,7 +12,7 @@ final class NetworkServiceImplementation: NetworkService {
         case noDataReceived
     }
 
-    func fetchTodos(completion: @escaping (Result<TodosDTO, Error>) -> Void) {
+    func fetchTodos(completion: @escaping (Result<TodosServerModel, Error>) -> Void) {
         guard let todosURL = NetworkServiceImplementation.todosURL else { return }
         fetchData(url: todosURL, completion: completion)
     }

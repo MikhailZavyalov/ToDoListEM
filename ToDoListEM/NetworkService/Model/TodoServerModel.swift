@@ -1,12 +1,11 @@
 
 import Foundation
 
-struct TodosDTO: Decodable {
-    let todos: [TodoDTO]
-    let total, skip, limit: Int
+struct TodosServerModel: Decodable {
+    let todos: [TodoServerModel]
 }
 
-struct TodoDTO: Decodable {
+struct TodoServerModel: Decodable {
     let id: Int
     let todo: String
     let completed: Bool

@@ -58,6 +58,7 @@ final class TodoListTableViewCell: UITableViewCell {
         backgroundColor = .clear
         selectionStyle = .none
         layer.masksToBounds = false
+        self.setEditing(true, animated: true)
 
         setupConstraints()
     }
@@ -73,7 +74,7 @@ final class TodoListTableViewCell: UITableViewCell {
         statusIcon.image = if model.status { UIImage(systemName: "checkmark.circle.fill") } else {
             UIImage(systemName: "circle")
         }
-        dateAndTimeLabel.text = Date().todoTime()
+        dateAndTimeLabel.text = "add time interval"
     }
 
     private func setupConstraints() {
@@ -98,8 +99,8 @@ final class TodoListTableViewCell: UITableViewCell {
         let constraints = [
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
-            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 0),
-            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: 0),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.heightAnchor.constraint(equalToConstant: 150),
 
             titlelabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),

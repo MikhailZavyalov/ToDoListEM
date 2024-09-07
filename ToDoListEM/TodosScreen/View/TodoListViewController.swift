@@ -2,7 +2,6 @@
 import UIKit
 
 class TodoListViewController: UIViewController {
-
     let viewModel: TodoListViewModel
 
     private let titleLabel: UILabel = {
@@ -37,30 +36,30 @@ class TodoListViewController: UIViewController {
 
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.layer.masksToBounds = false
         return tableView
     }()
 
     init(viewModel: TodoListViewModel) {
         self.viewModel = viewModel
-        viewModel.loadData()
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.loadData()
         view.backgroundColor = .white
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TodoListTableViewCell.self, forCellReuseIdentifier: TodoListTableViewCell.reuseID)
         viewModel.$todosModels.bind(executeInitially: true) { [weak self] models in
             self?.tableView.reloadData()
+            //diffableDataSource - googl it
         }
-
+        newTaskButton.addTarget(self, action: #selector(goToNewTodoScreen), for: .touchUpInside)
         setupConstraints()
     }
 
@@ -111,10 +110,25 @@ class TodoListViewController: UIViewController {
             closedButton.widthAnchor.constraint(equalToConstant: 60),
 
             tableView.topAnchor.constraint(equalTo: closedButton.bottomAnchor, constant: 40),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
         ])
+    }
+
+    @objc
+    func goToNewTodoScreen() {
+        present(NewTodoView(), animated: true)
+    }
+
+    private func openTodosCount() -> Int {
+        var openTodos = 0
+        for todo in viewModel.todosModels {
+            if todo.status {
+                openTodos += 1
+            }
+        }
+        return openTodos
     }
 }
 
@@ -131,9 +145,19 @@ extension TodoListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: TodoListTableViewCell.reuseID, for: indexPath)
         guard let taskCell = cell as? TodoListTableViewCell else { return cell }
         taskCell.configure(with: viewModel.todosModels[indexPath.row])
+        allButton.countOfTasks.text = "\(viewModel.todosModels.count)"
+        let openTodosCount = openTodosCount()
+        openButton.countOfTasks.text = "\(openTodosCount)"
+        closedButton.countOfTasks.text = "\(viewModel.todosModels.count - openTodosCount)"
         return taskCell
     }
 
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            print("Deleted")
 
+            viewModel.deleteTodo(at: indexPath)
+        }
+    }
 }
 

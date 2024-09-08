@@ -70,11 +70,11 @@ final class TodoListTableViewCell: UITableViewCell {
 
     func configure(with model: TodoListTableViewCellModel) {
         titlelabel.text = model.name
-        descriptionLabel.text = "Description"
+        descriptionLabel.text = model.description
         statusIcon.image = if model.status { UIImage(systemName: "checkmark.circle.fill") } else {
             UIImage(systemName: "circle")
         }
-        dateAndTimeLabel.text = "add time interval"
+        dateAndTimeLabel.text = model.date
     }
 
     private func setupConstraints() {
@@ -101,7 +101,7 @@ final class TodoListTableViewCell: UITableViewCell {
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            containerView.heightAnchor.constraint(equalToConstant: 150),
+            containerView.heightAnchor.constraint(equalToConstant: 140),
 
             titlelabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
             titlelabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
@@ -110,12 +110,12 @@ final class TodoListTableViewCell: UITableViewCell {
             descriptionLabel.topAnchor.constraint(equalTo: titlelabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
 
-            separator.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 8),
+            separator.topAnchor.constraint(equalTo: statusIcon.bottomAnchor, constant: 30),
             separator.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             separator.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             separator.heightAnchor.constraint(equalToConstant: 1),
 
-            dateAndTimeLabel.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 20),
+            dateAndTimeLabel.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: 10),
             dateAndTimeLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
 
             statusIcon.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 30),

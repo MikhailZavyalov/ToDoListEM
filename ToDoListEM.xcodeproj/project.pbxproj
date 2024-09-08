@@ -32,6 +32,8 @@
 		C18978262C8B789E005CE5BF /* CoreDataStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18978252C8B789E005CE5BF /* CoreDataStorage.swift */; };
 		C18978292C8B7C5B005CE5BF /* TodoDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = C18978282C8B7C5B005CE5BF /* TodoDTO.swift */; };
 		C189782B2C8B824B005CE5BF /* TodoCoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C189782A2C8B824B005CE5BF /* TodoCoreDataModel.swift */; };
+		C189782E2C8CB9E3005CE5BF /* EditTodoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C189782D2C8CB9E3005CE5BF /* EditTodoView.swift */; };
+		C18978302C8CCD9D005CE5BF /* CustomSwitchButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C189782F2C8CCD9D005CE5BF /* CustomSwitchButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,8 @@
 		C18978252C8B789E005CE5BF /* CoreDataStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStorage.swift; sourceTree = "<group>"; };
 		C18978282C8B7C5B005CE5BF /* TodoDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDTO.swift; sourceTree = "<group>"; };
 		C189782A2C8B824B005CE5BF /* TodoCoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCoreDataModel.swift; sourceTree = "<group>"; };
+		C189782D2C8CB9E3005CE5BF /* EditTodoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTodoView.swift; sourceTree = "<group>"; };
+		C189782F2C8CCD9D005CE5BF /* CustomSwitchButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSwitchButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +141,7 @@
 				C18978082C88B0A5005CE5BF /* NetworkService */,
 				C18977F62C875A17005CE5BF /* TodosScreen */,
 				C18978182C8B2BFC005CE5BF /* NewTodoView */,
+				C189782C2C8CB9CC005CE5BF /* ChangeToDO */,
 				C18977CA2C8758F6005CE5BF /* Assets.xcassets */,
 				C18977CC2C8758F6005CE5BF /* LaunchScreen.storyboard */,
 				C18977CF2C8758F6005CE5BF /* Info.plist */,
@@ -253,6 +258,15 @@
 				C18978042C875FB7005CE5BF /* FilterButton.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		C189782C2C8CB9CC005CE5BF /* ChangeToDO */ = {
+			isa = PBXGroup;
+			children = (
+				C189782D2C8CB9E3005CE5BF /* EditTodoView.swift */,
+				C189782F2C8CCD9D005CE5BF /* CustomSwitchButton.swift */,
+			);
+			path = ChangeToDO;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -391,6 +405,7 @@
 				C18978212C8B2CC7005CE5BF /* TextFieldView.swift in Sources */,
 				C18977BF2C8758F5005CE5BF /* AppDelegate.swift in Sources */,
 				C189781A2C8B2C12005CE5BF /* NewTodoView.swift in Sources */,
+				C18978302C8CCD9D005CE5BF /* CustomSwitchButton.swift in Sources */,
 				C18978032C875A35005CE5BF /* TodoListModel.swift in Sources */,
 				C18978072C88B066005CE5BF /* Observable.swift in Sources */,
 				C18977FB2C875A18005CE5BF /* TodoListTableViewCell.swift in Sources */,
@@ -402,6 +417,7 @@
 				C18978262C8B789E005CE5BF /* CoreDataStorage.swift in Sources */,
 				C18977C92C8758F5005CE5BF /* TodoListEM.xcdatamodeld in Sources */,
 				C18978052C875FB7005CE5BF /* FilterButton.swift in Sources */,
+				C189782E2C8CB9E3005CE5BF /* EditTodoView.swift in Sources */,
 				C18977FC2C875A18005CE5BF /* TodoListTableViewCellModel.swift in Sources */,
 				C189780A2C88B0BF005CE5BF /* NetworkService.swift in Sources */,
 				C18977F52C8759FC005CE5BF /* TableViewCell+reuseID.swift in Sources */,

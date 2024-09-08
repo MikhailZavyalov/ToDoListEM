@@ -2,16 +2,20 @@
 import Foundation
 
 struct TodoDTO {
-    let id: Int
-    let todo: String
-    let completed: Bool
-    let userID: Int
+    var id: Int
+    var todo: String
+    var todoDescription: String
+    var time: String
+    var completed: Bool
+    var userID: Int
 }
 
 extension TodoDTO {
     init(_ model: TodoServerModel) {
         id = model.id
         todo = model.todo
+        todoDescription = ""
+        time = ""
         completed = model.completed
         userID = model.userID
     }
@@ -19,6 +23,8 @@ extension TodoDTO {
     init(_ model: TodoCoreDataModel) {
         id = model.id
         todo = model.todo
+        todoDescription = model.todoDescription
+        time = model.time
         completed = model.completed
         userID = model.userID
     }

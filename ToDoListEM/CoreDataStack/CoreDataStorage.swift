@@ -37,6 +37,8 @@ final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
         todoMO.todo = todo.todo
         todoMO.completed = todo.completed
         todoMO.userID = Int64(todo.userID)
+        todoMO.todoDescription = todo.todoDescription
+        todoMO.time = todo.time
 
         try context.save()
         try updateData()
@@ -64,6 +66,8 @@ final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
         todoMO.todo = todo.todo
         todoMO.completed = todo.completed
         todoMO.userID = Int64(todo.userID)
+        todoMO.todoDescription = todo.todoDescription
+        todoMO.time = todo.time
 
         try context.save()
         try updateData()

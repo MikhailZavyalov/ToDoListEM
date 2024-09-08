@@ -3,6 +3,8 @@ import UIKit
 
 final class NewTodoView: UIViewController, UITextFieldDelegate {
 
+    let viewModel: TodoListViewModel
+
     private let newTodoNameLabel: UILabel = {
         let name = UILabel()
         name.text = "New Todo"
@@ -41,6 +43,15 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
         return button
     }()
 
+    init(viewModel: TodoListViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
@@ -115,6 +126,12 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
 
     @objc
     func addNewTodo() {
+        viewModel.addTodo(
+            name: newTodoTextField.text ?? "New ToDo",
+            completed: false,
+            description: newTodoDescriptionField.text ?? " ",
+            time: newTodoTimeAndDateField.text ?? " "
+        )
         dismiss(animated: true)
     }
 }

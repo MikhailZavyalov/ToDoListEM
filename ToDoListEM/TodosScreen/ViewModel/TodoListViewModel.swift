@@ -34,11 +34,13 @@ final class TodoListViewModel {
         }
     }
 
-    func addTodo(name: String, description: String) {
+    func addTodo(name: String, completed: Bool, description: String, time: String) {
         let todoDTO = TodoDTO(
             id: Int.random(in: 0...1_000_000),
             todo: name,
-            completed: <#T##Bool#>,
+            todoDescription: description,
+            time: time,
+            completed: completed,
             userID: 0
         )
         todoDTOs.insert(todoDTO, at: 0)
@@ -49,12 +51,16 @@ final class TodoListViewModel {
         let todo = todoDTOs[indexPath.row]
         todoDTOs.remove(at: indexPath.row)
         model.delete(todo: todo)
+        print("🍎", #function, todo)
     }
 
-    func editTodo(at indexPath: IndexPath, name: String, description: String) {
+    func editTodo(at indexPath: IndexPath, name: String, description: String, time: String, completed: Bool) {
         var todo = todoDTOs[indexPath.row]
-        // todo.cdd = descr
-        // todo.dv = scsdc.....
+        todo.todo = name
+        todo.todoDescription = description
+        todo.time = time
+        todo.completed = completed
+        todo.userID = 0
         todoDTOs[indexPath.row] = todo
         model.edit(todo: todo)
     }
@@ -64,5 +70,7 @@ private extension TodoListTableViewCellModel {
     init(todoDTO: TodoDTO) {
         name = todoDTO.todo
         status = todoDTO.completed
+        description = todoDTO.todoDescription
+        date = todoDTO.time
     }
 }

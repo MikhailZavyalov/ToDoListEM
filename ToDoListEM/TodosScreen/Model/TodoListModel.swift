@@ -45,6 +45,8 @@ private extension TodoListModel {
                         todo: TodoCoreDataModel(
                             id: todo.id,
                             todo: todo.todo,
+                            todoDescription: "",
+                            time: "",
                             completed: todo.completed,
                             userID: todo.userID
                         )

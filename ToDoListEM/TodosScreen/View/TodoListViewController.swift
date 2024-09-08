@@ -118,17 +118,17 @@ class TodoListViewController: UIViewController {
 
     @objc
     func goToNewTodoScreen() {
-        present(NewTodoView(), animated: true)
+        present(NewTodoView(viewModel: viewModel), animated: true)
     }
 
-    private func openTodosCount() -> Int {
-        var openTodos = 0
+    private func closedTodosCount() -> Int {
+        var closedTodos = 0
         for todo in viewModel.todosModels {
             if todo.status {
-                openTodos += 1
+                closedTodos += 1
             }
         }
-        return openTodos
+        return closedTodos
     }
 }
 
@@ -146,18 +146,21 @@ extension TodoListViewController: UITableViewDataSource {
         guard let taskCell = cell as? TodoListTableViewCell else { return cell }
         taskCell.configure(with: viewModel.todosModels[indexPath.row])
         allButton.countOfTasks.text = "\(viewModel.todosModels.count)"
-        let openTodosCount = openTodosCount()
-        openButton.countOfTasks.text = "\(openTodosCount)"
-        closedButton.countOfTasks.text = "\(viewModel.todosModels.count - openTodosCount)"
+        let closedTodosCount = closedTodosCount()
+        closedButton.countOfTasks.text = "\(closedTodosCount)"
+        openButton.countOfTasks.text = "\(viewModel.todosModels.count - closedTodosCount)"
         return taskCell
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             print("Deleted")
-
             viewModel.deleteTodo(at: indexPath)
         }
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        present(EditTodoView(viewModel: viewModel, indexPath: indexPath), animated: true)
     }
 }
 

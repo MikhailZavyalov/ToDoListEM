@@ -53,7 +53,7 @@ class TodoListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         viewModel.loadData()
-        view.backgroundColor = UIColor(named: "lightGray")
+        view.backgroundColor = UIColor(named: "LightGray")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TodoListTableViewCell.self, forCellReuseIdentifier: TodoListTableViewCell.reuseID)
@@ -142,6 +142,18 @@ class TodoListViewController: UIViewController {
 //            self?.viewModel.addTodo(newTodo: newTodoModel)
 //        }
 //        present(newTodoView, animated: true)
+    }
+
+    @objc
+    func filterByOpenTodos() {
+//        viewModel.filterByOpenTodos()
+//        print("🍎", #function, "Open")
+    }
+
+    @objc
+    func filterByClosedTodos() {
+//        viewModel.filterByClosedTodos()
+//        print("🍎", #function, "Closed")
     }
 
     @objc

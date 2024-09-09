@@ -67,7 +67,7 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
-        view.backgroundColor = UIColor(named: "lightGray")
+        view.backgroundColor = UIColor(named: "LightGray")
         setupConstraints()
 
         newTodoTextField.delegate = self

@@ -4,15 +4,15 @@ import Foundation
 final class TodoListViewModel {
     @Observable
     var todosModels: [TodoListTableViewCellModel] = []
-    private var todoDTOs: [TodoDTO] = [] {
+    private(set) var todoDTOs: [TodoDTO] = [] {
         didSet {
             todosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:))
         }
     }
 
-    private let model: TodoListModel
+    private let model: TodoListModelProtocol
 
-    init(model: TodoListModel) {
+    init(model: TodoListModelProtocol) {
         self.model = model
     }
 
@@ -34,13 +34,14 @@ final class TodoListViewModel {
         }
     }
 
-    func addTodo(name: String, completed: Bool, description: String, time: String) {
+    func addTodo(newTodo: NewTodoModel) {
         let todoDTO = TodoDTO(
             id: Int.random(in: 0...1_000_000),
-            todo: name,
-            todoDescription: description,
-            time: time,
-            completed: completed,
+            todo: newTodo.name,
+            todoDescription: newTodo.description,
+            startDate: newTodo.start,
+            endDate: newTodo.end,
+            completed: newTodo.completed,
             userID: 0
         )
         todoDTOs.insert(todoDTO, at: 0)
@@ -51,18 +52,13 @@ final class TodoListViewModel {
         let todo = todoDTOs[indexPath.row]
         todoDTOs.remove(at: indexPath.row)
         model.delete(todo: todo)
-        print("🍎", #function, todo)
     }
 
-    func editTodo(at indexPath: IndexPath, name: String, description: String, time: String, completed: Bool) {
-        var todo = todoDTOs[indexPath.row]
-        todo.todo = name
-        todo.todoDescription = description
-        todo.time = time
-        todo.completed = completed
-        todo.userID = 0
-        todoDTOs[indexPath.row] = todo
-        model.edit(todo: todo)
+    func editTodo(newTodo: TodoDTO) {
+        if let todoIndex = todoDTOs.firstIndex(where: { $0.id == newTodo.id }) {
+            todoDTOs[todoIndex] = newTodo
+        }
+        model.edit(todo: newTodo)
     }
 }
 
@@ -71,6 +67,18 @@ private extension TodoListTableViewCellModel {
         name = todoDTO.todo
         status = todoDTO.completed
         description = todoDTO.todoDescription
-        date = todoDTO.time
+        timeText =
+        if let startDate = todoDTO.startDate, let endDate = todoDTO.endDate {
+            dateFormatter.string(from: startDate) + " - " + dateFormatter.string(from: endDate)
+        } else {
+            ""
+        }
     }
 }
+
+private let dateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateStyle = .none
+    formatter.timeStyle = .short
+    return formatter
+}()

@@ -27,12 +27,13 @@ final class CustomSwitchButtonView: UIView {
 
     init(completed: Bool) {
         self.switchButtonTapped = completed
-        openTodoLeftButton.backgroundColor = completed ? .lightGray : .blue
-        closeTodoRightButton.backgroundColor = completed ? .blue : .lightGray
+        openTodoLeftButton.backgroundColor = completed ? UIColor(named: "lightBlue") : UIColor(named: "blue")
+        closeTodoRightButton.backgroundColor = completed ? UIColor(named: "blue") : UIColor(named: "lightBlue")
         openTodoLeftButton.setTitleColor(completed ? .black : .white, for: .normal)
         closeTodoRightButton.setTitleColor(completed ? .white : .black, for: .normal)
 
         super.init(frame: .zero)
+
         openTodoLeftButton.translatesAutoresizingMaskIntoConstraints = false
         closeTodoRightButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -44,7 +45,7 @@ final class CustomSwitchButtonView: UIView {
         backgroundColorHStackForButtons.translatesAutoresizingMaskIntoConstraints = false
         backgroundColorHStackForButtons.axis = .horizontal
         backgroundColorHStackForButtons.distribution = .fillEqually
-        backgroundColorHStackForButtons.backgroundColor = .blue
+        backgroundColorHStackForButtons.backgroundColor = .clear
         backgroundColorHStackForButtons.layer.cornerRadius = 16
 
         NSLayoutConstraint.activate([
@@ -58,16 +59,16 @@ final class CustomSwitchButtonView: UIView {
     @objc func tapOnSwitchButton() {
         if switchButtonTapped == false {
             switchButtonTapped = true
-            openTodoLeftButton.setTitleColor(UIColor.black, for: .normal)
-            closeTodoRightButton.setTitleColor(UIColor.white, for: .normal)
-            openTodoLeftButton.backgroundColor = .lightGray
-            closeTodoRightButton.backgroundColor = .blue
+            openTodoLeftButton.setTitleColor(UIColor(named: "blue"), for: .normal)
+            closeTodoRightButton.setTitleColor(.white, for: .normal)
+            openTodoLeftButton.backgroundColor = UIColor(named: "lightBlue")
+            closeTodoRightButton.backgroundColor = UIColor(named: "blue")
         } else {
             switchButtonTapped = false
-            openTodoLeftButton.setTitleColor(UIColor.white, for: .normal)
-            closeTodoRightButton.setTitleColor(UIColor.black, for: .normal)
-            openTodoLeftButton.backgroundColor = .blue
-            closeTodoRightButton.backgroundColor = .lightGray
+            openTodoLeftButton.setTitleColor(.white, for: .normal)
+            closeTodoRightButton.setTitleColor(UIColor(named: "blue"), for: .normal)
+            openTodoLeftButton.backgroundColor = UIColor(named: "blue")
+            closeTodoRightButton.backgroundColor = UIColor(named: "lightBlue")
         }
     }
 

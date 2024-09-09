@@ -19,34 +19,35 @@ final class TodoListTableViewCell: UITableViewCell {
     private let titlelabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = label.font.withSize(14)
+        label.font = label.font.withSize(16)
         label.numberOfLines = 0
+        label.numberOfLines = 2
         return label
     }()
 
     private let descriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
-        label.font = label.font.withSize(12)
+        label.textColor = UIColor(named: "gray")
+        label.font = label.font.withSize(14)
         return label
     }()
 
     private var statusIcon: UIImageView = {
         var status = UIImageView()
         status.image = UIImage(systemName: "circle")
-        status.tintColor = .gray
+        status.tintColor = UIColor(named: "gray")
         return status
     }()
 
     private let separator: UIView = {
         let separator = UIView()
-        separator.backgroundColor = .black
+        separator.backgroundColor = UIColor(named: "middleGray")
         return separator
     }()
 
     private let dateAndTimeLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .black
+        label.textColor = UIColor(named: "gray")
         label.font = label.font.withSize(14)
         return label
     }()
@@ -71,10 +72,11 @@ final class TodoListTableViewCell: UITableViewCell {
     func configure(with model: TodoListTableViewCellModel) {
         titlelabel.text = model.name
         descriptionLabel.text = model.description
-        statusIcon.image = if model.status { UIImage(systemName: "checkmark.circle.fill") } else {
+        statusIcon.image = if model.status { UIImage(systemName: "checkmark.circle.fill")
+        } else {
             UIImage(systemName: "circle")
         }
-        dateAndTimeLabel.text = model.date
+        dateAndTimeLabel.text = model.timeText
     }
 
     private func setupConstraints() {
@@ -103,7 +105,7 @@ final class TodoListTableViewCell: UITableViewCell {
             containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
             containerView.heightAnchor.constraint(equalToConstant: 140),
 
-            titlelabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 20),
+            titlelabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 10),
             titlelabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             titlelabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -65),
 

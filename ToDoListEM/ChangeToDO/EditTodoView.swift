@@ -2,9 +2,8 @@
 import UIKit
 
 final class EditTodoView: UIViewController, UITextFieldDelegate {
-
-    let viewModel: TodoListViewModel
-    let indexPath: IndexPath
+    private let editTodo: TodoDTO
+    private let onEditCompleted: (TodoDTO) -> Void
 
     private let editTodoNameLabel: UILabel = {
         let name = UILabel()
@@ -34,22 +33,34 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
         return time
     }()
 
-    private let editTodoTimeAndDateField = TextFieldView()
+    private let startDatePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .time
+        return datePicker
+    }()
 
-    private let editTodoButton: UIButton = {
+    private let endDatePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .time
+        return datePicker
+    }()
+
+    private let finishEditingButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
+        button.backgroundColor = UIColor(named: "lightBlue")
         button.setTitle("Edit ToDo", for: .normal)
+        button.setTitleColor(UIColor(named: "blue"), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.layer.cornerRadius = 16
         return button
     }()
 
     private var customSwitchButton: CustomSwitchButtonView
 
-    init(viewModel: TodoListViewModel, indexPath: IndexPath) {
-        self.viewModel = viewModel
-        self.indexPath = indexPath
-        customSwitchButton = CustomSwitchButtonView(completed: viewModel.todosModels[indexPath.row].status)
+    init(editTodo: TodoDTO, onEditCompleted: @escaping (TodoDTO) -> Void) {
+        self.editTodo = editTodo
+        self.onEditCompleted = onEditCompleted
+        customSwitchButton = CustomSwitchButtonView(completed: editTodo.completed)
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,17 +72,23 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "lightGray")
         setupConstraints()
 
-        editTodoNameTextField.text = viewModel.todosModels[indexPath.row].name
-        editTodoDescriptionField.text = viewModel.todosModels[indexPath.row].description
-        editTodoTimeAndDateField.text = viewModel.todosModels[indexPath.row].date
+        editTodoNameTextField.text = editTodo.todo
+        editTodoDescriptionField.text = editTodo.todoDescription
+
+        if let start = editTodo.startDate {
+            startDatePicker.date = start
+        }
+
+        if let end = editTodo.endDate {
+            endDatePicker.date = end
+        }
 
         editTodoNameTextField.delegate = self
         editTodoDescriptionField.delegate = self
-        editTodoTimeAndDateField.delegate = self
-        editTodoButton.addTarget(self, action: #selector(editTodo), for: .touchUpInside)
+        finishEditingButton.addTarget(self, action: #selector(finishEditing), for: .touchUpInside)
     }
 
     private func setupConstraints() {
@@ -90,14 +107,17 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
         view.addSubview(editTodoTimeAndDate)
         editTodoTimeAndDate.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(editTodoTimeAndDateField)
-        editTodoTimeAndDateField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(startDatePicker)
+        startDatePicker.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(endDatePicker)
+        endDatePicker.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(customSwitchButton)
         customSwitchButton.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(editTodoButton)
-        editTodoButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(finishEditingButton)
+        finishEditingButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             editTodoNameLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
@@ -125,32 +145,37 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
             editTodoTimeAndDate.heightAnchor.constraint(equalToConstant: 22),
             editTodoTimeAndDate.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            editTodoTimeAndDateField.topAnchor.constraint(equalTo: editTodoTimeAndDate.bottomAnchor, constant: 8),
-            editTodoTimeAndDateField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            editTodoTimeAndDateField.heightAnchor.constraint(equalToConstant: 48),
-            editTodoTimeAndDateField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            startDatePicker.bottomAnchor.constraint(equalTo: finishEditingButton.topAnchor, constant: 8),
+            startDatePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            customSwitchButton.topAnchor.constraint(equalTo: editTodoTimeAndDateField.bottomAnchor, constant: 20),
+            endDatePicker.bottomAnchor.constraint(equalTo: finishEditingButton.topAnchor, constant: 8),
+            endDatePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+
+
+            customSwitchButton.topAnchor.constraint(equalTo: editTodoTimeAndDate.bottomAnchor, constant: 20),
             customSwitchButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             customSwitchButton.heightAnchor.constraint(equalToConstant: 48),
             customSwitchButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            editTodoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            editTodoButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            editTodoButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            editTodoButton.heightAnchor.constraint(equalToConstant: 48),
+            finishEditingButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            finishEditingButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            finishEditingButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            finishEditingButton.heightAnchor.constraint(equalToConstant: 48),
         ])
     }
 
     @objc
-    func editTodo() {
-        viewModel.editTodo(
-            at: indexPath,
-            name: editTodoNameTextField.text ?? "",
-            description: editTodoDescriptionField.text ?? "",
-            time: editTodoTimeAndDateField.text ?? "",
-            completed: customSwitchButton.switchButtonTapped
+    func finishEditing() {
+        let newTodo = TodoDTO(
+            id: editTodo.id,
+            todo: editTodoNameTextField.text ?? editTodo.todo,
+            todoDescription: editTodoDescriptionField.text,
+            startDate: startDatePicker.date,
+            endDate: endDatePicker.date,
+            completed: customSwitchButton.switchButtonTapped,
+            userID: editTodo.userID
         )
+        onEditCompleted(newTodo)
         dismiss(animated: true)
     }
 }

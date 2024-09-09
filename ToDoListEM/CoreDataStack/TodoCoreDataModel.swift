@@ -4,8 +4,9 @@ import Foundation
 struct TodoCoreDataModel {
     let id: Int
     let todo: String
-    let todoDescription: String
-    let time: String
+    let todoDescription: String?
+    let startDate: Date?
+    let endDate: Date?
     let completed: Bool
     let userID: Int
 }
@@ -15,8 +16,9 @@ extension TodoCoreDataModel {
         self.init(
             id: Int(managedObject.id),
             todo: managedObject.todo ?? "",
-            todoDescription: managedObject.todoDescription ?? "",
-            time: managedObject.time ?? "",
+            todoDescription: managedObject.todoDescription,
+            startDate: managedObject.startDate,
+            endDate: managedObject.endDate,
             completed: managedObject.completed,
             userID: Int(managedObject.userID)
         )
@@ -27,7 +29,8 @@ extension TodoCoreDataModel {
             id: dto.id,
             todo: dto.todo,
             todoDescription: dto.todoDescription,
-            time: dto.time,
+            startDate: dto.startDate,
+            endDate: dto.endDate,
             completed: dto.completed,
             userID: dto.userID
         )

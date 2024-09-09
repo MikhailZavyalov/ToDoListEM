@@ -2,82 +2,89 @@ import Foundation
 import UIKit
 import CoreData
 
+/// @mockable
 protocol CoreDataStorageProtocol: NSObject {
-    var todos: [TodoCoreDataModel] { get }
-    func add(todo: TodoCoreDataModel) throws
-    func delete(todo: TodoCoreDataModel) throws
-    func overwrite(todo: TodoCoreDataModel) throws
-}
-
-private enum CoreDataStorageError: Error {
-    case entityWithSpecifiedIdNotFound
+    func getTodos() -> [TodoCoreDataModel]
+    func add(todo: TodoCoreDataModel)
+    func delete(todo: TodoCoreDataModel)
+    func overwrite(todo: TodoCoreDataModel)
 }
 
 final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
     static let shared = CoreDataStorage()
 
-    var todos: [TodoCoreDataModel] = []
-
-    private let context: NSManagedObjectContext
+    private let viewContext: NSManagedObjectContext
+    private let backgroundContext: NSManagedObjectContext
+    private let backgroundQueue = DispatchQueue(label: "todoListEM.CoreDataStorage")
 
     private convenience override init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        try! self.init(context: context)
+        let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let backgroundContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.newBackgroundContext()
+        try! self.init(viewContext: viewContext, backgroundContext: backgroundContext)
     }
 
-    private init(context: NSManagedObjectContext) throws {
-        self.context = context
+    private init(viewContext: NSManagedObjectContext, backgroundContext: NSManagedObjectContext) throws {
+        self.viewContext = viewContext
+        self.backgroundContext = backgroundContext
         super.init()
-        try updateData()
     }
 
-    func add(todo: TodoCoreDataModel) throws {
-        let todoMO = TodoManagedObject(context: context)
-        todoMO.id = Int64(todo.id)
-        todoMO.todo = todo.todo
-        todoMO.completed = todo.completed
-        todoMO.userID = Int64(todo.userID)
-        todoMO.todoDescription = todo.todoDescription
-        todoMO.time = todo.time
-
-        try context.save()
-        try updateData()
+    func getTodos() -> [TodoCoreDataModel] {
+        (try? fetchTodos(context: viewContext).map(TodoCoreDataModel.init(managedObject:))) ?? []
     }
 
-    func delete(todo: TodoCoreDataModel) throws {
-        let todos = try fetchTodos()
-        guard let todoMO = todos.first(where: {
-            $0.id == todo.id
-        }) else {
-            throw CoreDataStorageError.entityWithSpecifiedIdNotFound
+    func add(todo: TodoCoreDataModel) {
+        backgroundQueue.async { [weak self] in
+            guard let self else { return }
+            let todoMO = TodoManagedObject(context: backgroundContext)
+            todoMO.id = Int64(todo.id)
+            todoMO.todo = todo.todo
+            todoMO.completed = todo.completed
+            todoMO.userID = Int64(todo.userID)
+            todoMO.todoDescription = todo.todoDescription
+            todoMO.startDate = todo.startDate
+            todoMO.endDate = todo.endDate
+
+            try? backgroundContext.save()
         }
-        context.delete(todoMO)
-        try updateData()
     }
 
-    func overwrite(todo: TodoCoreDataModel) throws {
-        let todos = try fetchTodos()
-        guard let todoMO = todos.first(where: {
-            $0.id == todo.id
-        }) else {
-            throw CoreDataStorageError.entityWithSpecifiedIdNotFound
+    func delete(todo: TodoCoreDataModel) {
+        backgroundQueue.async { [weak self] in
+            guard let self else { return }
+            let todos = try? fetchTodos(context: backgroundContext)
+            guard let todoMO = todos?.first(where: {
+                $0.id == todo.id
+            }) else {
+                return
+            }
+            backgroundContext.delete(todoMO)
+            try? backgroundContext.save()
         }
-        todoMO.id = Int64(todo.id)
-        todoMO.todo = todo.todo
-        todoMO.completed = todo.completed
-        todoMO.userID = Int64(todo.userID)
-        todoMO.todoDescription = todo.todoDescription
-        todoMO.time = todo.time
-
-        try context.save()
-        try updateData()
     }
 
-    private func updateData() throws {
-        todos = try fetchTodos().map(TodoCoreDataModel.init(managedObject:))
+    func overwrite(todo: TodoCoreDataModel) {
+        backgroundQueue.async { [weak self] in
+            guard let self else { return }
+            let todos = try? fetchTodos(context: backgroundContext)
+            guard let todoMO = todos?.first(where: {
+                $0.id == todo.id
+            }) else {
+                return
+            }
+            todoMO.id = Int64(todo.id)
+            todoMO.todo = todo.todo
+            todoMO.completed = todo.completed
+            todoMO.userID = Int64(todo.userID)
+            todoMO.todoDescription = todo.todoDescription
+            todoMO.startDate = todo.startDate
+            todoMO.endDate = todo.endDate
+
+            try? backgroundContext.save()
+        }
     }
 
-    private func fetchTodos() throws -> [TodoManagedObject] {
+    private func fetchTodos(context: NSManagedObjectContext) throws -> [TodoManagedObject] {
         let fetchRequest = TodoManagedObject.fetchRequest()
         fetchRequest.sortDescriptors = [
             NSSortDescriptor(keyPath: \TodoManagedObject.completed, ascending: true)

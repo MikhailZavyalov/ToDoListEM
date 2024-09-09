@@ -1,8 +1,16 @@
 import Foundation
 
+/// @mockable
+protocol TodoListModelProtocol {
+    func loadTodos(completion: @escaping (Result<[TodoDTO], Error>) -> Void)
+    func add(todo: TodoDTO)
+    func delete(todo: TodoDTO)
+    func edit(todo: TodoDTO)
+}
+
 private let requestSucceededKey = "requestSucceededKey"
 
-final class TodoListModel {
+final class TodoListModel: TodoListModelProtocol {
     private let networkService: NetworkService
     private let coreDataStorage: CoreDataStorageProtocol
 
@@ -20,15 +28,15 @@ final class TodoListModel {
     }
 
     func add(todo: TodoDTO) {
-        try? coreDataStorage.add(todo: TodoCoreDataModel(dto: todo))
+        coreDataStorage.add(todo: TodoCoreDataModel(dto: todo))
     }
 
     func delete(todo: TodoDTO) {
-        try? coreDataStorage.delete(todo: TodoCoreDataModel(dto: todo))
+        coreDataStorage.delete(todo: TodoCoreDataModel(dto: todo))
     }
 
     func edit(todo: TodoDTO) {
-        try? coreDataStorage.overwrite(todo: TodoCoreDataModel(dto: todo))
+        coreDataStorage.overwrite(todo: TodoCoreDataModel(dto: todo))
     }
 }
 
@@ -41,12 +49,13 @@ private extension TodoListModel {
                 completion(.failure(error))
             case let .success(serverTodos):
                 serverTodos.todos.forEach { todo in
-                    try? self.coreDataStorage.add(
+                    self.coreDataStorage.add(
                         todo: TodoCoreDataModel(
                             id: todo.id,
                             todo: todo.todo,
-                            todoDescription: "",
-                            time: "",
+                            todoDescription: nil,
+                            startDate: nil,
+                            endDate: nil,
                             completed: todo.completed,
                             userID: todo.userID
                         )
@@ -59,7 +68,7 @@ private extension TodoListModel {
     }
 
     func loadTodosFromCoreData(completion: @escaping (Result<[TodoDTO], Error>) -> Void) {
-        completion(.success(coreDataStorage.todos.map(TodoDTO.init)))
+        completion(.success(coreDataStorage.getTodos().map(TodoDTO.init)))
     }
 }
 

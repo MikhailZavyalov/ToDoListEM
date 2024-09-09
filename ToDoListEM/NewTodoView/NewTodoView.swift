@@ -1,14 +1,17 @@
-
+// TODO: - change color for button if fields are empty
 import UIKit
 
 final class NewTodoView: UIViewController, UITextFieldDelegate {
 
-    let viewModel: TodoListViewModel
+    private let onNewTodoCreated: (NewTodoModel) -> Void
+
+    private let startDatePicker = UIDatePicker()
+    private let endDatePicker = UIDatePicker()
 
     private let newTodoNameLabel: UILabel = {
         let name = UILabel()
         name.text = "New Todo"
-        name.font = UIFont(name: "Mulish", size: 16)
+        name.font = UIFont.boldSystemFont(ofSize: 16)
         name.textColor = .black
         return name
     }()
@@ -18,7 +21,7 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
     private let newTodoDescriptionLabel: UILabel = {
         let description = UILabel()
         description.text = "Description"
-        description.font = UIFont(name: "Mulish", size: 16)
+        description.font = UIFont.boldSystemFont(ofSize: 16)
         description.textColor = .black
         return description
     }()
@@ -28,7 +31,7 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
     private let newTodoTimeAndDate: UILabel = {
         let newTodo = UILabel()
         newTodo.text = "Time"
-        newTodo.font = UIFont(name: "Mulish", size: 16)
+        newTodo.font = UIFont.boldSystemFont(ofSize: 16)
         newTodo.textColor = .black
         return newTodo
     }()
@@ -37,25 +40,27 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
 
     private let addNewTodoButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .blue
+        button.backgroundColor = UIColor(named: "lightBlue")
         button.setTitle("Add new ToDo", for: .normal)
+        button.setTitleColor(UIColor(named: "blue"), for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.layer.cornerRadius = 16
         return button
     }()
 
-    init(viewModel: TodoListViewModel) {
-        self.viewModel = viewModel
+    init(onNewTodoCreated: @escaping (NewTodoModel) -> Void) {
+        self.onNewTodoCreated = onNewTodoCreated
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         hideKeyboardWhenTappedAround()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor(named: "lightGray")
         setupConstraints()
 
         newTodoTextField.delegate = self
@@ -126,12 +131,18 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
 
     @objc
     func addNewTodo() {
-        viewModel.addTodo(
-            name: newTodoTextField.text ?? "New ToDo",
+        guard
+            let name = newTodoTextField.text,
+            let description = newTodoDescriptionField.text
+        else { return }
+        let newTodoModel = NewTodoModel(
+            name: name,
             completed: false,
-            description: newTodoDescriptionField.text ?? " ",
-            time: newTodoTimeAndDateField.text ?? " "
+            description: description,
+            start: startDatePicker.date,
+            end: endDatePicker.date
         )
+        onNewTodoCreated(newTodoModel)
         dismiss(animated: true)
     }
 }

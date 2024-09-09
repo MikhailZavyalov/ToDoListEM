@@ -17,7 +17,7 @@ final class CustomSwitchButtonView: UIView {
 
     let closeTodoRightButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Close", for: .normal)
+        button.setTitle("Closed", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true

@@ -5,9 +5,6 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
 
     private let onNewTodoCreated: (NewTodoModel) -> Void
 
-    private let startDatePicker = UIDatePicker()
-    private let endDatePicker = UIDatePicker()
-
     private let newTodoNameLabel: UILabel = {
         let name = UILabel()
         name.text = "New Todo"
@@ -36,7 +33,17 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
         return newTodo
     }()
 
-    private let newTodoTimeAndDateField = TextFieldView()
+    private let startDatePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .time
+        return datePicker
+    }()
+
+    private let endDatePicker: UIDatePicker = {
+        let datePicker = UIDatePicker()
+        datePicker.datePickerMode = .time
+        return datePicker
+    }()
 
     private let addNewTodoButton: UIButton = {
         let button = UIButton()
@@ -65,7 +72,6 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
 
         newTodoTextField.delegate = self
         newTodoDescriptionField.delegate = self
-        newTodoTimeAndDateField.delegate = self
         addNewTodoButton.addTarget(self, action: #selector(addNewTodo), for: .touchUpInside)
     }
 
@@ -85,8 +91,11 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
         view.addSubview(newTodoTimeAndDate)
         newTodoTimeAndDate.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(newTodoTimeAndDateField)
-        newTodoTimeAndDateField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(startDatePicker)
+        startDatePicker.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(endDatePicker)
+        endDatePicker.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(addNewTodoButton)
         addNewTodoButton.translatesAutoresizingMaskIntoConstraints = false
@@ -109,7 +118,7 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
 
             newTodoDescriptionField.topAnchor.constraint(equalTo: newTodoDescriptionLabel.bottomAnchor, constant: 8),
             newTodoDescriptionField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            newTodoDescriptionField.heightAnchor.constraint(equalToConstant: 48),
+            newTodoDescriptionField.heightAnchor.constraint(equalToConstant: 300),
             newTodoDescriptionField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
             newTodoTimeAndDate.topAnchor.constraint(equalTo: newTodoDescriptionField.bottomAnchor, constant: 20),
@@ -117,10 +126,10 @@ final class NewTodoView: UIViewController, UITextFieldDelegate {
             newTodoTimeAndDate.heightAnchor.constraint(equalToConstant: 22),
             newTodoTimeAndDate.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            newTodoTimeAndDateField.topAnchor.constraint(equalTo: newTodoTimeAndDate.bottomAnchor, constant: 8),
-            newTodoTimeAndDateField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            newTodoTimeAndDateField.heightAnchor.constraint(equalToConstant: 48),
-            newTodoTimeAndDateField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            startDatePicker.topAnchor.constraint(equalTo: newTodoTimeAndDate.bottomAnchor, constant: 8),
+            startDatePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            endDatePicker.topAnchor.constraint(equalTo: newTodoTimeAndDate.bottomAnchor, constant: 8),
+            endDatePicker.leadingAnchor.constraint(equalTo: startDatePicker.trailingAnchor, constant: 8),
 
             addNewTodoButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             addNewTodoButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),

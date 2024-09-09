@@ -20,7 +20,6 @@ final class TodoListTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = .black
         label.font = label.font.withSize(16)
-        label.numberOfLines = 0
         label.numberOfLines = 2
         return label
     }()
@@ -29,6 +28,7 @@ final class TodoListTableViewCell: UITableViewCell {
         let label = UILabel()
         label.textColor = UIColor(named: "gray")
         label.font = label.font.withSize(14)
+        label.numberOfLines = 2
         return label
     }()
 
@@ -111,6 +111,7 @@ final class TodoListTableViewCell: UITableViewCell {
 
             descriptionLabel.topAnchor.constraint(equalTo: titlelabel.bottomAnchor, constant: 8),
             descriptionLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+//            descriptionLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -65),
 
             separator.topAnchor.constraint(equalTo: statusIcon.bottomAnchor, constant: 30),
             separator.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),

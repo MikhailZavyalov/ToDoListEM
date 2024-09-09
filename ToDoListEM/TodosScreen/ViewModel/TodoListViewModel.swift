@@ -2,11 +2,27 @@
 import Foundation
 
 final class TodoListViewModel {
+
+    var openTodosModels: [TodoListTableViewCellModel] = []
+
+    var closedTodosModels: [TodoListTableViewCellModel] = []
+
+    @Observable
+    var filteredTodosModels: [TodoListTableViewCellModel] = []
+
     @Observable
     var todosModels: [TodoListTableViewCellModel] = []
     private(set) var todoDTOs: [TodoDTO] = [] {
         didSet {
             todosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:))
+            
+            if filteredTodosModels.isEmpty {
+                filteredTodosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:))
+            } else { return }
+
+            openTodosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:)).filter({ $0.status == false })
+
+            closedTodosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:)).filter({ $0.status == true })
         }
     }
 
@@ -82,3 +98,15 @@ private let dateFormatter: DateFormatter = {
     formatter.timeStyle = .short
     return formatter
 }()
+
+extension TodoListViewModel {
+    func filterByOpenTodos() -> [TodoListTableViewCellModel] {
+        filteredTodosModels = openTodosModels
+        return filteredTodosModels
+    }
+
+    func filterByClosedTodos() -> [TodoListTableViewCellModel] {
+        filteredTodosModels = closedTodosModels
+        return filteredTodosModels
+    }
+}

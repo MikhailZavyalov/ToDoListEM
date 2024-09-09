@@ -66,7 +66,14 @@ class TodoListViewController: UIViewController {
             openButton.setCountText("\(viewModel.todosModels.count - closedTodosCount)")
             //diffableDataSource - googl it
         }
+
+        viewModel.$filteredTodosModels.bind(executeInitially: true) { [weak self] models in
+            guard let self else { return }
+            tableView.reloadData()
+        }
         newTaskButton.addTarget(self, action: #selector(goToNewTodoScreen), for: .touchUpInside)
+        openButton.addTarget(self, action: #selector(filterByOpenTodos), for: .touchUpInside)
+        closedButton.addTarget(self, action: #selector(filterByClosedTodos), for: .touchUpInside)
         setupConstraints()
     }
 
@@ -106,15 +113,15 @@ class TodoListViewController: UIViewController {
 
             allButton.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 30),
             allButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-//            allButton.widthAnchor.constraint(equalToConstant: 60),
+            allButton.heightAnchor.constraint(equalToConstant: 20),
 
             openButton.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 30),
             openButton.leadingAnchor.constraint(equalTo: allButton.trailingAnchor, constant: 30),
-//            openButton.widthAnchor.constraint(equalToConstant: 60),
+            openButton.heightAnchor.constraint(equalToConstant: 20),
 
             closedButton.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 30),
             closedButton.leadingAnchor.constraint(equalTo: openButton.trailingAnchor, constant: 30),
-//            closedButton.widthAnchor.constraint(equalToConstant: 60),
+            closedButton.heightAnchor.constraint(equalToConstant: 20),
 
             tableView.topAnchor.constraint(equalTo: closedButton.bottomAnchor, constant: 10),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
@@ -125,10 +132,28 @@ class TodoListViewController: UIViewController {
 
     @objc
     func goToNewTodoScreen() {
-        let newTodoView = NewTodoView { [weak self] newTodoModel in
-            self?.viewModel.addTodo(newTodo: newTodoModel)
-        }
-        present(newTodoView, animated: true)
+        viewModel.filterByOpenTodos()
+        print("🍎", #function, "Open")
+
+//        viewModel.filterByClosedTodos()
+//        print("🍎", #function, "Closed")
+
+//        let newTodoView = NewTodoView { [weak self] newTodoModel in
+//            self?.viewModel.addTodo(newTodo: newTodoModel)
+//        }
+//        present(newTodoView, animated: true)
+    }
+
+    @objc
+    func filterByOpenTodos() {
+//        viewModel.filterByOpenTodos()
+//        print("🍎", #function, "Open")
+    }
+
+    @objc
+    func filterByClosedTodos() {
+//        viewModel.filterByClosedTodos()
+//        print("🍎", #function, "Closed")
     }
 
     private func closedTodosCount() -> Int {
@@ -148,13 +173,13 @@ extension TodoListViewController: UITableViewDelegate {
 
 extension TodoListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.todosModels.count
+        viewModel.filteredTodosModels.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TodoListTableViewCell.reuseID, for: indexPath)
         guard let taskCell = cell as? TodoListTableViewCell else { return cell }
-        taskCell.configure(with: viewModel.todosModels[indexPath.row])
+        taskCell.configure(with: viewModel.filteredTodosModels[indexPath.row])
         return taskCell
     }
 

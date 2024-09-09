@@ -137,7 +137,7 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
 
             editTodoDescriptionField.topAnchor.constraint(equalTo: editTodoDescriptionLabel.bottomAnchor, constant: 8),
             editTodoDescriptionField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            editTodoDescriptionField.heightAnchor.constraint(equalToConstant: 48),
+            editTodoDescriptionField.heightAnchor.constraint(equalToConstant: 300),
             editTodoDescriptionField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
             editTodoTimeAndDate.topAnchor.constraint(equalTo: editTodoDescriptionField.bottomAnchor, constant: 20),
@@ -145,14 +145,13 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
             editTodoTimeAndDate.heightAnchor.constraint(equalToConstant: 22),
             editTodoTimeAndDate.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            startDatePicker.bottomAnchor.constraint(equalTo: finishEditingButton.topAnchor, constant: 8),
+            startDatePicker.topAnchor.constraint(equalTo: editTodoTimeAndDate.bottomAnchor, constant: 8),
             startDatePicker.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
-            endDatePicker.bottomAnchor.constraint(equalTo: finishEditingButton.topAnchor, constant: 8),
-            endDatePicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            endDatePicker.topAnchor.constraint(equalTo: editTodoTimeAndDate.bottomAnchor, constant: 8),
+            endDatePicker.leadingAnchor.constraint(equalTo: startDatePicker.trailingAnchor, constant: 8),
 
-
-            customSwitchButton.topAnchor.constraint(equalTo: editTodoTimeAndDate.bottomAnchor, constant: 20),
+            customSwitchButton.topAnchor.constraint(equalTo: endDatePicker.bottomAnchor, constant: 20),
             customSwitchButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             customSwitchButton.heightAnchor.constraint(equalToConstant: 48),
             customSwitchButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),

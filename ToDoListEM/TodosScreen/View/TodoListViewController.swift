@@ -132,28 +132,10 @@ class TodoListViewController: UIViewController {
 
     @objc
     func goToNewTodoScreen() {
-        viewModel.filterByOpenTodos()
-        print("🍎", #function, "Open")
-
-//        viewModel.filterByClosedTodos()
-//        print("🍎", #function, "Closed")
-
-//        let newTodoView = NewTodoView { [weak self] newTodoModel in
-//            self?.viewModel.addTodo(newTodo: newTodoModel)
-//        }
-//        present(newTodoView, animated: true)
-    }
-
-    @objc
-    func filterByOpenTodos() {
-//        viewModel.filterByOpenTodos()
-//        print("🍎", #function, "Open")
-    }
-
-    @objc
-    func filterByClosedTodos() {
-//        viewModel.filterByClosedTodos()
-//        print("🍎", #function, "Closed")
+        let newTodoView = NewTodoView { [weak self] newTodoModel in
+            self?.viewModel.addTodo(newTodo: newTodoModel)
+        }
+        present(newTodoView, animated: true)
     }
 
     @objc
@@ -185,13 +167,13 @@ extension TodoListViewController: UITableViewDelegate {
 
 extension TodoListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.filteredTodosModels.count
+        viewModel.todosModels.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TodoListTableViewCell.reuseID, for: indexPath)
         guard let taskCell = cell as? TodoListTableViewCell else { return cell }
-        taskCell.configure(with: viewModel.filteredTodosModels[indexPath.row])
+        taskCell.configure(with: viewModel.todosModels[indexPath.row])
         return taskCell
     }
 

@@ -8,7 +8,7 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
     private let editTodoNameLabel: UILabel = {
         let name = UILabel()
         name.text = "Edit Todo"
-        name.font = UIFont(name: "Mulish", size: 16)
+        name.font = UIFont.boldSystemFont(ofSize: 16)
         name.textColor = .black
         return name
     }()
@@ -18,7 +18,7 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
     private let editTodoDescriptionLabel: UILabel = {
         let description = UILabel()
         description.text = "Description"
-        description.font = UIFont(name: "Mulish", size: 16)
+        description.font = UIFont.boldSystemFont(ofSize: 16)
         description.textColor = .black
         return description
     }()
@@ -28,7 +28,7 @@ final class EditTodoView: UIViewController, UITextFieldDelegate {
     private let editTodoTimeAndDate: UILabel = {
         let time = UILabel()
         time.text = "Time"
-        time.font = UIFont(name: "Mulish", size: 16)
+        time.font = UIFont.boldSystemFont(ofSize: 16)
         time.textColor = .black
         return time
     }()

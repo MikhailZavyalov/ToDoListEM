@@ -10,8 +10,8 @@ final class FilterButton: UIButton {
 
     private let title: UILabel = {
         let title = UILabel()
-        title.font = title.font.withSize(16)
-        title.textColor = .black
+        title.font = UIFont.boldSystemFont(ofSize: 16)
+        title.textColor = UIColor(named: "gray")
         return title
     }()
 
@@ -37,10 +37,9 @@ final class FilterButton: UIButton {
         return stack
     }()
 
-    init(title: String, countOfTasks: String) {
+    init(title: String) {
         super.init(frame: .zero)
         self.title.text = title
-        self.countOfTasks.text = countOfTasks
 
         setupConstraints()
     }

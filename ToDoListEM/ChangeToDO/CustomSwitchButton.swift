@@ -8,7 +8,6 @@ final class CustomSwitchButtonView: UIView {
     let openTodoLeftButton: UIButton = {
         let button = UIButton()
         button.setTitle("Open", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.backgroundColor = .blue
@@ -18,7 +17,6 @@ final class CustomSwitchButtonView: UIView {
     let closeTodoRightButton: UIButton = {
         let button = UIButton()
         button.setTitle("Closed", for: .normal)
-        button.setTitleColor(UIColor.black, for: .normal)
         button.layer.cornerRadius = 16
         button.layer.masksToBounds = true
         button.backgroundColor = .blue
@@ -29,8 +27,8 @@ final class CustomSwitchButtonView: UIView {
         self.switchButtonTapped = completed
         openTodoLeftButton.backgroundColor = completed ? UIColor(named: "lightBlue") : UIColor(named: "blue")
         closeTodoRightButton.backgroundColor = completed ? UIColor(named: "blue") : UIColor(named: "lightBlue")
-        openTodoLeftButton.setTitleColor(completed ? .black : .white, for: .normal)
-        closeTodoRightButton.setTitleColor(completed ? .white : .black, for: .normal)
+        openTodoLeftButton.setTitleColor(completed ? UIColor(named: "blue") : .white, for: .normal)
+        closeTodoRightButton.setTitleColor(completed ? .white : UIColor(named: "blue"), for: .normal)
 
         super.init(frame: .zero)
 

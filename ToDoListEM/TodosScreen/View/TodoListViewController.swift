@@ -31,13 +31,19 @@ class TodoListViewController: UIViewController {
         return button
     }()
 
-    private var allButton = FilterButton(title: "All", countOfTasks: "")
-    var openButton = FilterButton(title: "Open", countOfTasks: "15")
-    var closedButton = FilterButton(title: "Closed", countOfTasks: "8")
+    private var allButton = FilterButton(title: "All")
+    private var openButton = FilterButton(title: "Open")
+    private var closedButton = FilterButton(title: "Closed")
+
+    private let separator: UIView = {
+        let separator = UIView()
+        separator.backgroundColor = UIColor(named: "gray")
+        return separator
+    }()
 
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = UIColor(named: "lightGray")
+        tableView.backgroundColor = UIColor(named: "LightGray")
         return tableView
     }()
 
@@ -90,6 +96,9 @@ class TodoListViewController: UIViewController {
         view.addSubview(allButton)
         allButton.translatesAutoresizingMaskIntoConstraints = false
 
+        view.addSubview(separator)
+        separator.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(openButton)
         openButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -115,12 +124,17 @@ class TodoListViewController: UIViewController {
             allButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             allButton.heightAnchor.constraint(equalToConstant: 20),
 
+            separator.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 30),
+            separator.leadingAnchor.constraint(equalTo: allButton.trailingAnchor, constant: 20),
+            separator.heightAnchor.constraint(equalToConstant: 20),
+            separator.widthAnchor.constraint(equalToConstant: 2),
+
             openButton.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 30),
-            openButton.leadingAnchor.constraint(equalTo: allButton.trailingAnchor, constant: 30),
+            openButton.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: 20),
             openButton.heightAnchor.constraint(equalToConstant: 20),
 
             closedButton.topAnchor.constraint(equalTo: date.bottomAnchor, constant: 30),
-            closedButton.leadingAnchor.constraint(equalTo: openButton.trailingAnchor, constant: 30),
+            closedButton.leadingAnchor.constraint(equalTo: openButton.trailingAnchor, constant: 20),
             closedButton.heightAnchor.constraint(equalToConstant: 20),
 
             tableView.topAnchor.constraint(equalTo: closedButton.bottomAnchor, constant: 10),

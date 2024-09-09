@@ -19,7 +19,7 @@ final class TodoListTableViewCell: UITableViewCell {
     private let titlelabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        label.font = label.font.withSize(16)
+        label.font = UIFont.boldSystemFont(ofSize: 16)
         label.numberOfLines = 2
         return label
     }()
@@ -27,7 +27,7 @@ final class TodoListTableViewCell: UITableViewCell {
     private let descriptionLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor(named: "gray")
-        label.font = label.font.withSize(14)
+        label.font = UIFont.boldSystemFont(ofSize: 14)
         label.numberOfLines = 2
         return label
     }()
@@ -35,7 +35,6 @@ final class TodoListTableViewCell: UITableViewCell {
     private var statusIcon: UIImageView = {
         var status = UIImageView()
         status.image = UIImage(systemName: "circle")
-        status.tintColor = UIColor(named: "gray")
         return status
     }()
 
@@ -75,6 +74,12 @@ final class TodoListTableViewCell: UITableViewCell {
         statusIcon.image = if model.status { UIImage(systemName: "checkmark.circle.fill")
         } else {
             UIImage(systemName: "circle")
+        }
+
+        statusIcon.tintColor = if model.status {
+            UIColor(named: "blue")
+        } else {
+            UIColor(named: "gray")
         }
         dateAndTimeLabel.text = model.timeText
     }

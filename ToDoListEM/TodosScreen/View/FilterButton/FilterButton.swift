@@ -6,7 +6,7 @@ private enum Constants {
     static let titleInsets = UIEdgeInsets.zero
 }
 
-final class FilterButton: UIButton {
+final class FilterButton: UIView {
 
     private let title: UILabel = {
         let title = UILabel()
@@ -37,9 +37,15 @@ final class FilterButton: UIButton {
         return stack
     }()
 
+    private let button: UIButton = {
+        let button = UIButton()
+        return button
+    }()
+
     init(title: String) {
         super.init(frame: .zero)
         self.title.text = title
+        isUserInteractionEnabled = true
 
         setupConstraints()
     }
@@ -52,14 +58,17 @@ final class FilterButton: UIButton {
         addSubview(hStack)
         hStack.translatesAutoresizingMaskIntoConstraints = false
 
-        hStack.addSubview(title)
+        hStack.addArrangedSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false
 
-        hStack.addSubview(taskCountBackground)
+        hStack.addArrangedSubview(taskCountBackground)
         taskCountBackground.translatesAutoresizingMaskIntoConstraints = false
 
         taskCountBackground.addSubview(countOfTasks)
         countOfTasks.translatesAutoresizingMaskIntoConstraints = false
+
+        addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             hStack.topAnchor.constraint(equalTo: topAnchor, constant: 0),
@@ -80,6 +89,11 @@ final class FilterButton: UIButton {
             taskCountBackground.widthAnchor.constraint(equalTo: countOfTasks.widthAnchor, constant: Constants.counterInsets.left + Constants.counterInsets.right),
             taskCountBackground.trailingAnchor.constraint(equalTo: hStack.trailingAnchor),
             taskCountBackground.bottomAnchor.constraint(equalTo: hStack.bottomAnchor),
+
+            button.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            button.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 0),
+            button.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
+            button.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
         ])
     }
 
@@ -87,8 +101,15 @@ final class FilterButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    func updateCornerRadius() {
         taskCountBackground.layer.cornerRadius = taskCountBackground.frame.height / 2
+    }
+
+    func addTarget(
+        _ target: Any?,
+        action: Selector,
+        for controlEvents: UIControl.Event
+    ) {
+        button.addTarget(target, action: action, for: controlEvents)
     }
 }

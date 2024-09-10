@@ -2,8 +2,9 @@
 import UIKit
 
 struct TodoListTableViewCellModel {
-    var name: String
-    var description: String?
-    var timeText: String?
-    var status: Bool
+    let id: Int
+    let name: String
+    let description: String?
+    let timeText: String?
+    let status: Bool
 }

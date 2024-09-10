@@ -31,9 +31,9 @@ class TodoListViewController: UIViewController {
         return button
     }()
 
-    private var allButton = FilterButton(title: "All")
+    private let allButton = FilterButton(title: "All")
     private var openButton = FilterButton(title: "Open")
-    private var closedButton = FilterButton(title: "Closed")
+    private let closedButton = FilterButton(title: "Closed")
 
     private let separator: UIView = {
         let separator = UIView()
@@ -66,21 +66,36 @@ class TodoListViewController: UIViewController {
         viewModel.$todosModels.bind(executeInitially: true) { [weak self] models in
             guard let self else { return }
             tableView.reloadData()
-            let closedTodosCount = closedTodosCount()
-            allButton.setCountText("\(viewModel.todosModels.count)")
-            closedButton.setCountText("\(closedTodosCount)")
-            openButton.setCountText("\(viewModel.todosModels.count - closedTodosCount)")
             //diffableDataSource - googl it
         }
 
-        viewModel.$filteredTodosModels.bind(executeInitially: true) { [weak self] models in
+        viewModel.$allCount.bind(executeInitially: true) { [weak self] allCount in
             guard let self else { return }
-            tableView.reloadData()
+            allButton.setCountText("\(allCount)")
         }
+
+        viewModel.$openCount.bind(executeInitially: true) { [weak self] openCount in
+            guard let self else { return }
+            openButton.setCountText("\(openCount)")
+        }
+
+        viewModel.$closedCount.bind(executeInitially: true) { [weak self] closedCount in
+            guard let self else { return }
+            closedButton.setCountText("\(closedCount)")
+        }
+
         newTaskButton.addTarget(self, action: #selector(goToNewTodoScreen), for: .touchUpInside)
-        openButton.addTarget(self, action: #selector(filterByOpenTodos), for: .touchUpInside)
-        closedButton.addTarget(self, action: #selector(filterByClosedTodos), for: .touchUpInside)
+        allButton.addTarget(self, action: #selector(filterAll), for: .touchUpInside)
+        openButton.addTarget(self, action: #selector(filterOpen), for: .touchUpInside)
+        closedButton.addTarget(self, action: #selector(filterClosed), for: .touchUpInside)
         setupConstraints()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        allButton.updateCornerRadius()
+        openButton.updateCornerRadius()
+        closedButton.updateCornerRadius()
     }
 
     private func setupConstraints() {
@@ -153,16 +168,20 @@ class TodoListViewController: UIViewController {
     }
 
     @objc
-    func filterByOpenTodos() {
-//        viewModel.filterByOpenTodos()
-//        print("🍎", #function, "Open")
+    func filterAll() {
+        viewModel.filterTodos(by: .all)
     }
 
     @objc
-    func filterByClosedTodos() {
-//        viewModel.filterByClosedTodos()
-//        print("🍎", #function, "Closed")
+    func filterOpen() {
+        viewModel.filterTodos(by: .open)
     }
+
+    @objc
+    func filterClosed() {
+        viewModel.filterTodos(by: .closed)
+    }
+
 
     private func closedTodosCount() -> Int {
         var closedTodos = 0
@@ -199,7 +218,11 @@ extension TodoListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let editTodoView = EditTodoView(editTodo: viewModel.todoDTOs[indexPath.row]) { [weak self] newTodo in
+        guard 
+            let editTodo = viewModel.todoDTOs.first(where: {
+                $0.id == viewModel.todosModels[indexPath.row].id
+            }) else { return }
+        let editTodoView = EditTodoView(editTodo: editTodo) { [weak self] newTodo in
             self?.viewModel.editTodo(newTodo: newTodo)
         }
         present(editTodoView, animated: true)

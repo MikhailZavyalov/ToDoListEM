@@ -1,28 +1,36 @@
 
 import Foundation
 
+enum TodoFilter {
+    case all
+    case open
+    case closed
+}
+
 final class TodoListViewModel {
 
-    var openTodosModels: [TodoListTableViewCellModel] = []
-
-    var closedTodosModels: [TodoListTableViewCellModel] = []
-
     @Observable
-    var filteredTodosModels: [TodoListTableViewCellModel] = []
+    var allCount: Int = 0
+    @Observable
+    var openCount: Int = 0
+    @Observable
+    var closedCount: Int = 0
+
+    private var currentFilter: TodoFilter = .all {
+        didSet {
+            todosModels = todosModelsWithFilter()
+        }
+    }
 
     @Observable
     var todosModels: [TodoListTableViewCellModel] = []
     private(set) var todoDTOs: [TodoDTO] = [] {
         didSet {
-            todosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:))
-            
-            if filteredTodosModels.isEmpty {
-                filteredTodosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:))
-            } else { return }
+            todosModels = todosModelsWithFilter()
 
-            openTodosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:)).filter({ $0.status == false })
-
-            closedTodosModels = todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:)).filter({ $0.status == true })
+            allCount = todoDTOs.count
+            openCount = todoDTOs.filter { !$0.completed }.count
+            closedCount = allCount - openCount
         }
     }
 
@@ -76,10 +84,30 @@ final class TodoListViewModel {
         }
         model.edit(todo: newTodo)
     }
+
+    func filterTodos(by filter: TodoFilter) {
+        currentFilter = filter
+    }
+
+    private func todosModelsWithFilter() -> [TodoListTableViewCellModel] {
+        switch currentFilter {
+        case .all:
+            todoDTOs.map(TodoListTableViewCellModel.init(todoDTO:))
+        case .open:
+            todoDTOs
+                .filter { !$0.completed }
+                .map(TodoListTableViewCellModel.init(todoDTO:))
+        case .closed:
+            todoDTOs
+                .filter { $0.completed }
+                .map(TodoListTableViewCellModel.init(todoDTO:))
+        }
+    }
 }
 
 private extension TodoListTableViewCellModel {
     init(todoDTO: TodoDTO) {
+        id = todoDTO.id
         name = todoDTO.todo
         status = todoDTO.completed
         description = todoDTO.todoDescription
@@ -98,15 +126,3 @@ private let dateFormatter: DateFormatter = {
     formatter.timeStyle = .short
     return formatter
 }()
-
-extension TodoListViewModel {
-    func filterByOpenTodos() -> [TodoListTableViewCellModel] {
-        filteredTodosModels = openTodosModels
-        return filteredTodosModels
-    }
-
-    func filterByClosedTodos() -> [TodoListTableViewCellModel] {
-        filteredTodosModels = closedTodosModels
-        return filteredTodosModels
-    }
-}

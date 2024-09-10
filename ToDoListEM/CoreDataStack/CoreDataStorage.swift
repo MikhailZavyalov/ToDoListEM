@@ -15,7 +15,6 @@ final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
 
     private let viewContext: NSManagedObjectContext
     private let backgroundContext: NSManagedObjectContext
-    private let backgroundQueue = DispatchQueue(label: "todoListEM.CoreDataStorage")
 
     private convenience override init() {
         let viewContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -34,7 +33,7 @@ final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
     }
 
     func add(todo: TodoCoreDataModel) {
-        backgroundQueue.async { [weak self] in
+        backgroundContext.perform { [weak self] in
             guard let self else { return }
             let todoMO = TodoManagedObject(context: backgroundContext)
             todoMO.id = Int64(todo.id)
@@ -50,7 +49,7 @@ final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
     }
 
     func delete(todo: TodoCoreDataModel) {
-        backgroundQueue.async { [weak self] in
+        backgroundContext.perform { [weak self] in
             guard let self else { return }
             let todos = try? fetchTodos(context: backgroundContext)
             guard let todoMO = todos?.first(where: {
@@ -64,7 +63,7 @@ final class CoreDataStorage: NSObject, CoreDataStorageProtocol {
     }
 
     func overwrite(todo: TodoCoreDataModel) {
-        backgroundQueue.async { [weak self] in
+        backgroundContext.perform { [weak self] in
             guard let self else { return }
             let todos = try? fetchTodos(context: backgroundContext)
             guard let todoMO = todos?.first(where: {

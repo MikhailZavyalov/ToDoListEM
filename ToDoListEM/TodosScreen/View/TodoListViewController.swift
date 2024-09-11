@@ -9,7 +9,6 @@ class TodoListViewController: UIViewController {
         title.text = "Today's Task"
         title.font = UIFont.boldSystemFont(ofSize: 28)
         title.textColor = .black
-
         return title
     }()
 
@@ -228,4 +227,3 @@ extension TodoListViewController: UITableViewDataSource {
         present(editTodoView, animated: true)
     }
 }
-

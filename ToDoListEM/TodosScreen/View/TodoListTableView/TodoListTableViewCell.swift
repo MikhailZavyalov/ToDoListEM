@@ -103,7 +103,7 @@ final class TodoListTableViewCell: UITableViewCell {
         containerView.addSubview(statusIcon)
         statusIcon.translatesAutoresizingMaskIntoConstraints = false
 
-        let constraints = [
+        NSLayoutConstraint.activate([
             containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
             containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 0),
             containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -114,11 +114,11 @@ final class TodoListTableViewCell: UITableViewCell {
             titlelabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             titlelabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -65),
 
-            descriptionLabel.topAnchor.constraint(equalTo: titlelabel.bottomAnchor, constant: 8),
+            descriptionLabel.topAnchor.constraint(equalTo: titlelabel.bottomAnchor, constant: 0),
             descriptionLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-//            descriptionLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -65),
+            descriptionLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -65),
 
-            separator.topAnchor.constraint(equalTo: statusIcon.bottomAnchor, constant: 30),
+            separator.topAnchor.constraint(equalTo: statusIcon.bottomAnchor, constant: 35),
             separator.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             separator.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
             separator.heightAnchor.constraint(equalToConstant: 1),
@@ -130,14 +130,6 @@ final class TodoListTableViewCell: UITableViewCell {
             statusIcon.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             statusIcon.heightAnchor.constraint(equalToConstant: 25),
             statusIcon.widthAnchor.constraint(equalToConstant: 25),
-
-        ]
-
-        constraints.forEach {
-            $0.priority = .defaultHigh
-        }
-
-        NSLayoutConstraint.activate(constraints)
+        ])
     }
 }
-
